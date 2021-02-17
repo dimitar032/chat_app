@@ -8,10 +8,16 @@
     text-align: center;
     height: calc(100vh - 55px);
 
+    .space-between-new-message-and-first-user{
+      padding: 10px 0;
+    }
+
     .chat-room-new-room-button {
         color: #ffed4a;
-        font-size: 18px;
+        font-size: 26px;
         font-weight: 600;
+        cursor: pointer;
+        line-height: 90px;
       }
       
       li {
@@ -20,7 +26,11 @@
         cursor: pointer;
         background: $lighterPurple;
       }
-     
+      .active {
+        font-weight: bold;
+        background: $darkerPurple;
+      }
+
   }
   
   .chat-message {
@@ -75,8 +85,23 @@
         }
       }
   }
-  
-  
+
+
+
+  .new-chat-modal-selected-user{
+    color: $white;
+    background-color: $purpleMain;
+    padding: 7px;
+    display: inline-block;
+    cursor: alias;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+
  
   
 }

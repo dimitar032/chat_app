@@ -1,6 +1,14 @@
 <template>
   <div class="row chat-page">
     <div class="col-md-3 chat-room">
+      <div
+        class="chat-room-new-room-button"
+        data-toggle="modal"
+        data-target="#newMessageModal"
+      >
+        New Message
+      </div>
+      <div class="space-between-new-message-and-first-user"></div>
       <ul>
         <li>User1</li>
         <li class="active">User2</li>
@@ -60,11 +68,19 @@
         </div>
       </div>
     </div>
+
+    <new-chat-message-modal-component />
   </div>
 </template>
 
+
 <script>
+import NewChatMessageModalComponent from "./NewChatMessageModalComponent";
+
 export default {
+  components: {
+    NewChatMessageModalComponent,
+  },
   mounted() {
     console.log("Component mounted.");
   },

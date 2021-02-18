@@ -19,6 +19,7 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('chat-app-component', require('./components/ChatAppComponent.vue').default);
+Vue.component('validation-errors', require('./components/utility/ValidationErrors.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

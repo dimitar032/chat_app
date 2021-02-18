@@ -37,32 +37,31 @@
               <validation-errors :errors="validationErrors" v-if="validationErrors"></validation-errors>
             </div>
 
-            <table class="table table-sm table-hover">
-              <thead>
-                <tr>
-                  <th scope="col">Select</th>
-                  <th scope="col">Name</th>
-                  <th scope="col">Email</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="foundUser in foundUsers" :key="foundUser.id">
-                  <td>
-                    <div class="custom-control custom-checkbox">
+            <div class="table-responsive new-chat-modal-found-users-table">
+              <table class="table table-sm table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">Select</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="foundUser in foundUsers" :key="foundUser.id">
+                    <td>
                       <input
                         type="checkbox"
-                        class="custom-control-input"
-                        id="customCheck1"
+                        id="checkbox"
+                        @change="toggleUserFromSelectedUsers(foundUser)"
+                        v-model="foundUser.selected"
                       />
-                      <label class="custom-control-label" for="customCheck1"></label>
-                    </div>
-                  </td>
-                  <td>{{ foundUser.name }}</td>
-                  <td>{{ foundUser.email }}</td>
-                </tr>
-              </tbody>
-            </table>
-
+                    </td>
+                    <td>{{ foundUser.name }}</td>
+                    <td>{{ foundUser.email }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
             <hr />
             <div class="">
               <label for="email" class="">Chat Name:</label>
@@ -82,24 +81,17 @@
 
             <h4>Selected:</h4>
             <div>
-              <span class="new-chat-modal-selected-user">
-                user1@test.test
-                <span class="badge badge-danger" @click="foo">X</span>
-              </span>
-            </div>
-            <div>
-              <span class="new-chat-modal-selected-user">
-                user1@test.test
-                <span class="badge badge-danger" @click="foo">X</span>
-              </span>
-
-              <span class="new-chat-modal-selected-user">
-                user2@test.test
-                <span class="badge badge-danger" @click="foo">X</span>
-              </span>
-              <span class="new-chat-modal-selected-user">
-                user3@test.test
-                <span class="badge badge-danger" @click="foo">X</span>
+              <span
+                v-for="selectedUser in selectedUsers"
+                :key="selectedUser.id"
+                class="new-chat-modal-selected-user"
+              >
+                {{ selectedUser.email }}
+                <span
+                  class="badge badge-danger badge-remove-selected-user"
+                  @click="removeSelectedUser(selectedUser)"
+                  >X</span
+                >
               </span>
             </div>
           </div>
@@ -122,6 +114,7 @@ export default {
     validationErrors: null,
     queryParameter: "",
     foundUsers: [],
+    selectedUsers: [],
   }),
   methods: {
     searchUsersFromDb() {
@@ -131,8 +124,15 @@ export default {
         .then((response) => {
           this.foundUsers = response.data;
 
-          this.foundUsers.forEach((user) => {
-            this.$set(user, "selected", false);
+          this.foundUsers.forEach((newFoundUser) => {
+            let foundUser = this.selectedUsers.find(
+              (u) => u.id == newFoundUser.id
+            );
+            if (foundUser === undefined) {
+              this.$set(newFoundUser, "selected", false);
+            } else {
+              this.$set(newFoundUser, "selected", foundUser.selected);
+            }
           });
         })
         .catch((e) => {
@@ -141,8 +141,27 @@ export default {
           }
         });
     },
-    foo() {
-      console.log("hello from remove user");
+    toggleUserFromSelectedUsers(user) {
+      if (user.selected == true) {
+        this.selectedUsers.push(user);
+      } else {
+        this.__removeUserFromSelectedUsers(user);
+      }
+    },
+    removeSelectedUser(user) {
+      this.__removeUserFromSelectedUsers(user);
+      user.selected = false;
+
+      let foundUser = this.foundUsers.find((u) => u.id == user.id);
+      if (foundUser != undefined) {
+        foundUser.selected = false
+      }
+    },
+    __removeUserFromSelectedUsers(user) {
+      let userIndex = this.selectedUsers.findIndex((u) => u.id == user.id);
+      if (userIndex != -1) {
+        this.selectedUsers.splice(userIndex, 1);
+      }
     },
   },
 };

@@ -25,12 +25,18 @@
             <div>
               <input
                 type="text"
+                v-model="queryParameter"
                 name="findUserByNameOrEmail"
                 placeholder="Find a user by name or email"
                 autofocus
               />
-              <button type="submit" class="btn btn-info">Search</button>
+              <button class="btn btn-info" @click="searchUsersFromDb()">
+                Search
+              </button>
+
+              <validation-errors :errors="validationErrors" v-if="validationErrors"></validation-errors>
             </div>
+
             <table class="table table-sm table-hover">
               <thead>
                 <tr>
@@ -40,7 +46,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                <tr v-for="foundUser in foundUsers" :key="foundUser.id">
                   <td>
                     <div class="custom-control custom-checkbox">
                       <input
@@ -51,36 +57,8 @@
                       <label class="custom-control-label" for="customCheck1"></label>
                     </div>
                   </td>
-                  <td>User1</td>
-                  <td>user1@test.test</td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="custom-control custom-checkbox">
-                      <input
-                        type="checkbox"
-                        class="custom-control-input"
-                        id="customCheck2"
-                      />
-                      <label class="custom-control-label" for="customCheck2"></label>
-                    </div>
-                  </td>
-                  <td>User2</td>
-                  <td>user2@test.test</td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="custom-control custom-checkbox">
-                      <input
-                        type="checkbox"
-                        class="custom-control-input"
-                        id="customCheck3"
-                      />
-                      <label class="custom-control-label" for="customCheck3"></label>
-                    </div>
-                  </td>
-                  <td>User2</td>
-                  <td>user2@test.test</td>
+                  <td>{{ foundUser.name }}</td>
+                  <td>{{ foundUser.email }}</td>
                 </tr>
               </tbody>
             </table>
@@ -136,8 +114,33 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
+  data: () => ({
+    errors: null,
+    validationErrors: null,
+    queryParameter: "",
+    foundUsers: [],
+  }),
   methods: {
+    searchUsersFromDb() {
+      this.validationErrors = null;
+      axios
+        .get(`/api/users/new-chat-room-search?query=${this.queryParameter}`)
+        .then((response) => {
+          this.foundUsers = response.data;
+
+          this.foundUsers.forEach((user) => {
+            this.$set(user, "selected", false);
+          });
+        })
+        .catch((e) => {
+          if (e.response.status == 422) {
+            this.validationErrors = e.response.data.errors;
+          }
+        });
+    },
     foo() {
       console.log("hello from remove user");
     },

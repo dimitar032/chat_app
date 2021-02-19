@@ -41,6 +41,21 @@
       
   }
   
+  .home-applet{
+    display: flex;
+    align-items: center;
+    background-color: $dirtyWhitePurple;
+    justify-content: center;
+
+    .hello-text{
+      font-size: 3.8em;
+    }
+
+    .description-text{
+      font-size: 1.3em;
+    }
+  }
+
   .chat-message {
     background: $dirtyWhite;
 

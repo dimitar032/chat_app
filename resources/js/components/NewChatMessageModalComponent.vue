@@ -80,7 +80,7 @@
 
             <hr />
 
-            <h4>Selected:</h4>
+            <h4>Selected Users:</h4>
             <div>
               <span
                 v-for="selectedUser in selectedUsers"

@@ -128,12 +128,12 @@ export default {
     selectedUsers: [],
     storeChatRoomValidationErrors: null,
   }),
-   watch: {
+  watch: {
     selectedUsers: function() {
       this.chatName = Array.prototype.map
-          .call(this.selectedUsers, (u) => u.name)
-          .join(", ") //Note: generate dynamic name based on users name separated by comma
-          .substring(0, 55); //Note: limit generated name to 55 symbols because of backend max-length validation
+        .call(this.selectedUsers, (u) => u.name)
+        .join(", ") //Note: generate dynamic name based on users name separated by comma
+        .substring(0, 55); //Note: limit generated name to 55 symbols because of backend max-length validation
     }
   },
   methods: {
@@ -173,7 +173,9 @@ export default {
           selected_users_id: selectedUsersId,
         })
         .then((response) => {
-          console.log(response)
+          if (response.status == 201) {
+            window.location = response.data._redirect_url;
+          }
         })
         .catch((e) => {
           if (e.response.status == 422) {

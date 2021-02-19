@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\ChatRoom;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class ChatRoomController extends Controller
 {
@@ -35,8 +36,29 @@ class ChatRoomController extends Controller
             throw $e;
         }
         DB::commit();
-        
+
+        $chatRoom['_redirect_url'] = route('chat-room.show', ['id' => $chatRoom->id]);
+
         return response()->json($chatRoom, 201);
+    }
+
+    /**
+     * Display the specified chat room.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        if (Gate::denies('can-auth-user-see-chat-room', [$id])) {
+            abort(403);
+        }
+
+        $chatRoom = ChatRoom::findOrFail($id);
+
+        return view('chat-room', [
+            'id' => $chatRoom->id,
+        ]);
     }
 
 }

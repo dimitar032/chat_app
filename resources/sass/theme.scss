@@ -7,19 +7,27 @@
     background: $purpleMain;
     
     .chat-room-list{
+      overflow-y: scroll;
+      height: 70vh;
       color: $white;
       margin: 0;
       padding: 0;
       text-indent: 0;
       list-style-type: none;
       
-      li {
+      a {
+        text-decoration: none;
+      }
+
+      .chat-room-list-name {
         text-align: center;
+        color: $white;
         font-size: 24px;
         padding: 8px 0;
         cursor: pointer;
         background: $lighterPurple;
       }
+     
       .active {
         font-weight: bold;
         background: $darkerPurple;

@@ -20,6 +20,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('users/new-chat-room-search', 'UserController@search');
+    Route::get('users/{id}/chat-rooms', 'UserController@getAllChatRooms');
+
 
     Route::post('chat-rooms', 'ChatRoomController@store');
 });

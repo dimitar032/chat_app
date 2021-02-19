@@ -36,5 +36,14 @@ class AuthServiceProvider extends ServiceProvider
             }
 
         });
+
+        Gate::define('is-this-user-the-auth-user', function ($user, $thisUserId) {
+            if ($user->id == $thisUserId) {
+                return true;
+            } else {
+                return false;
+            }
+
+        });
     }
 }

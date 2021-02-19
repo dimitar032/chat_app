@@ -28,7 +28,12 @@ class ChatRoomController extends Controller
         try {
             $chatRoom = ChatRoom::create(['name' => $request->input('name')]);
 
-            $chatRoom->users()->attach($request->input('selected_users_id'));
+            $chatRoom->users()->attach(
+                array_merge(
+                    $request->input('selected_users_id'), //Note: Attach all selected users
+                    [auth()->user()->id] //Note: attach auth user
+                )
+            );
 
         } catch (\Throwable $e) {
 

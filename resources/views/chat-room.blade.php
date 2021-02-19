@@ -3,6 +3,6 @@
 @section('content')
 <div class="row chat-page">
     <chat-side-bar-section></chat-side-bar-section>
-    <home-section user-name="{{auth()->user()->name}}"></home-section>
+    <chat-messages-section :chat-room-id="{{$id}}"></chat-messages-section>
 </div>
 @endsection

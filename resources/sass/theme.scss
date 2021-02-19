@@ -3,10 +3,28 @@
     margin-right: 0px;
   
   .chat-room {
-    background: $purpleMain;
-    color: $white;
-    text-align: center;
     height: calc(100vh - 55px);
+    background: $purpleMain;
+    
+    .chat-room-list{
+      color: $white;
+      margin: 0;
+      padding: 0;
+      text-indent: 0;
+      list-style-type: none;
+      
+      li {
+        text-align: center;
+        font-size: 24px;
+        padding: 8px 0;
+        cursor: pointer;
+        background: $lighterPurple;
+      }
+      .active {
+        font-weight: bold;
+        background: $darkerPurple;
+      }
+    }
 
     .space-between-new-message-and-first-user{
       padding: 10px 0;
@@ -18,19 +36,9 @@
         font-weight: 600;
         cursor: pointer;
         line-height: 90px;
+        text-align: center;
       }
       
-      li {
-        font-size: 24px;
-        padding: 8px 0;
-        cursor: pointer;
-        background: $lighterPurple;
-      }
-      .active {
-        font-weight: bold;
-        background: $darkerPurple;
-      }
-
   }
   
   .chat-message {

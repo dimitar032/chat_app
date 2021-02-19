@@ -11,7 +11,7 @@ class UserController extends Controller
     /**
      * Display a users of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function search(Request $request)
     {

@@ -22,6 +22,8 @@
             </button>
           </div>
           <div class="modal-body">
+
+            <h5>Find users:</h5>
             <div>
               <input
                 type="text"

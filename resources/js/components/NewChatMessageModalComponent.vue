@@ -34,7 +34,7 @@
                 Search
               </button>
 
-              <validation-errors :errors="validationErrors" v-if="validationErrors"></validation-errors>
+              <validation-errors :errors="searchUserValidationErrors" v-if="searchUserValidationErrors"></validation-errors>
             </div>
 
             <div class="table-responsive new-chat-modal-found-users-table">
@@ -65,12 +65,13 @@
             <hr />
             <div class="">
               <label for="email" class="">Chat Name:</label>
-
+            
               <span class="">
                 <input
                   id="chatName"
                   type="text"
                   name="chatName"
+                  v-model="chatName"
                   size="50"
                   placeholder="The name of the Chat room (Optional)"
                 />
@@ -95,9 +96,17 @@
               </span>
             </div>
           </div>
+            
+          <validation-errors :errors="storeChatRoomValidationErrors" v-if="storeChatRoomValidationErrors"></validation-errors>
 
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary">Chat</button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              @click="storeChatRoom()"
+            >
+              Chat
+            </button>
           </div>
         </div>
       </div>
@@ -111,14 +120,24 @@ import axios from "axios";
 export default {
   data: () => ({
     errors: null,
-    validationErrors: null,
+    searchUserValidationErrors: null,
     queryParameter: "",
     foundUsers: [],
+    chatName: "",
     selectedUsers: [],
+    storeChatRoomValidationErrors: null,
   }),
+   watch: {
+    selectedUsers: function() {
+      this.chatName = Array.prototype.map
+          .call(this.selectedUsers, (u) => u.name)
+          .join(", ") //Note: generate dynamic name based on users name separated by comma
+          .substring(0, 55); //Note: limit generated name to 55 symbols because of backend max-length validation
+    }
+  },
   methods: {
     searchUsersFromDb() {
-      this.validationErrors = null;
+      this.searchUserValidationErrors = null;
       axios
         .get(`/api/users/new-chat-room-search?query=${this.queryParameter}`)
         .then((response) => {
@@ -137,7 +156,27 @@ export default {
         })
         .catch((e) => {
           if (e.response.status == 422) {
-            this.validationErrors = e.response.data.errors;
+            this.searchUserValidationErrors = e.response.data.errors;
+          }
+        });
+    },
+    storeChatRoom() {
+      let selectedUsersId = Array.prototype.map.call(
+        this.selectedUsers,
+        (u) => u.id
+      );
+
+      axios
+        .post(`/api/chat-rooms`, {
+          name: this.chatName,
+          selected_users_id: selectedUsersId,
+        })
+        .then((response) => {
+          console.log(response)
+        })
+        .catch((e) => {
+          if (e.response.status == 422) {
+            this.storeChatRoomValidationErrors = e.response.data.errors;
           }
         });
     },

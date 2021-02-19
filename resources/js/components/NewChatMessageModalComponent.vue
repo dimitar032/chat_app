@@ -62,21 +62,6 @@
                 </tbody>
               </table>
             </div>
-            <hr />
-            <div class="">
-              <label for="email" class="">Chat Name:</label>
-            
-              <span class="">
-                <input
-                  id="chatName"
-                  type="text"
-                  name="chatName"
-                  v-model="chatName"
-                  size="50"
-                  placeholder="The name of the Chat room (Optional)"
-                />
-              </span>
-            </div>
 
             <hr />
 
@@ -95,9 +80,25 @@
                 >
               </span>
             </div>
+
+            <hr />
+            <div class="">
+              <label for="email" class="">Chat Name:</label>
+
+              <span class="">
+                <input
+                  id="chatName"
+                  type="text"
+                  name="chatName"
+                  v-model="chatName"
+                  size="50"
+                  placeholder="The name of the Chat room (Optional)"
+                />
+              </span>
+            </div>
+
+            <validation-errors :errors="storeChatRoomValidationErrors" v-if="storeChatRoomValidationErrors"></validation-errors>
           </div>
-            
-          <validation-errors :errors="storeChatRoomValidationErrors" v-if="storeChatRoomValidationErrors"></validation-errors>
 
           <div class="modal-footer">
             <button

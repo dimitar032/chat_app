@@ -149,6 +149,7 @@ class ChatRoomController extends Controller
             ->join('users', 'messages.user_id', '=', 'users.id')
             ->where('chat_room_message.chat_room_id', $id)
             ->orderBy('chat_room_message.created_at', 'ASC')
+            ->limit(10000) //TODO: change with lazy loading
             ->get();
 
         return response()->json($chatRoomMessages);

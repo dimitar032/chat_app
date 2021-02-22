@@ -30,6 +30,7 @@
           name="newMessage"
           placeholder="Type a message"
           autofocus
+          @keyup.enter="storeMessage()"
         />
         <button @click="storeMessage()" class="btn btn-primary">Send</button>
       </div>

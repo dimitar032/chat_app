@@ -1,5 +1,7 @@
 # Description
 This Chat Application allows registered users to leave messages to other registered users.
+
+![Screenshot](app_screenshot.png)
 # Main functionality:
 - Registration page
 - Login page

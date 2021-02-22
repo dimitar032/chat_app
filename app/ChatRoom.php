@@ -17,11 +17,11 @@ class ChatRoom extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class)->withTimestamps();
     }
 
     public function messages()
     {
-        return $this->belongsToMany(Message::class);
+        return $this->belongsToMany(Message::class)->withTimestamps();
     }
 }

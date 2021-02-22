@@ -67,7 +67,7 @@ class ChatRoomController extends Controller
         ]);
     }
 
-     /**
+    /**
      * Store a newly created message to the chat room in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -105,4 +105,32 @@ class ChatRoomController extends Controller
         return response()->json($message, 201);
     }
 
+    /**
+     * Get all messages in chat room from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getMessages($id)
+    {
+        if (Gate::denies('can-auth-user-see-chat-room', [$id])) {
+            abort(403);
+        }
+
+        $chatRoomMessages = DB::table('messages')
+            ->select([
+                'messages.id',
+                'messages.value',
+                'messages.created_at',
+                'messages.user_id',
+                'users.name as user_name',
+            ])
+            ->join('chat_room_message', 'messages.id', '=', 'chat_room_message.message_id')
+            ->join('users', 'messages.user_id', '=', 'users.id')
+            ->where('chat_room_message.chat_room_id', $id)
+            ->orderBy('chat_room_message.created_at', 'ASC')
+            ->get();
+
+        return response()->json($chatRoomMessages);
+    }
 }

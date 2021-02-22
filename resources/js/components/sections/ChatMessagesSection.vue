@@ -3,36 +3,20 @@
     <div class="col-md-2"></div>
     <div class="col-md-10 message-applet">
       <div class="all-messages">
-        <div class="message-box">
-          <div class="text-align-right">Me, 10:34</div>
-          <div class="auth-user-message text-align-right">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum
+        <div
+          class="message-box"
+          v-for="message in chatRoomMessages"
+          :key="message.id"
+        >
+          <div v-if="message.user_id == authUserId">
+            <div class="text-align-right">Me, {{ message.created_at }}</div>
+            <div class="auth-user-message text-align-right">
+              {{ message.value }}
+            </div>
           </div>
-        </div>
-
-        <div class="message-box">
-          <div class="">User2, 10:35</div>
-          <div class="other-users-message">Message 1</div>
-        </div>
-
-        <div class="message-box">
-          <div class="text-align-right">Me, 10:36</div>
-          <div class="auth-user-message text-align-right">Message 2</div>
-        </div>
-
-        <div class="message-box">
-          <div class="">User2, 10:37</div>
-          <div class="other-users-message">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eum culpa
-            exercitationem nisi, sed saepe quas? Deleniti, debitis iure
-            molestias saepe mollitia enim itaque excepturi culpa, sed
-            consectetur exercitationem temporibus quam!
+          <div v-else>
+            <div>{{ message.user_name }}, {{ message.created_at }}</div>
+            <div class="other-users-message">{{ message.value }}</div>
           </div>
         </div>
       </div>
@@ -64,13 +48,32 @@ export default {
       type: Number,
       required: true,
     },
+    authUserId: {
+      type: Number,
+      required: true,
+    },
   },
   data: () => ({
     newMessageText: "",
     validationErrors: null,
+    chatRoomMessages: [],
   }),
+  mounted() {
+    this.getAllMessagesInThisChatRoom();
+  },
   methods: {
+    getAllMessagesInThisChatRoom() {
+      axios
+        .get(`/api/chat-rooms/${this.chatRoomId}/messages`)
+        .then((response) => {
+          this.chatRoomMessages = response.data;
+        });
+    },
     storeMessage() {
+      if(this.newMessageText.length < 1){ //Note: do not make request when the field is empty
+        return;
+      }
+      
       this.validationErrors = null;
 
       axios
@@ -79,7 +82,7 @@ export default {
         })
         .then((response) => {
           this.newMessageText = "";
-          console.log(response);
+          this.getAllMessagesInThisChatRoom();
         })
         .catch((e) => {
           if (e.response.status == 422) {

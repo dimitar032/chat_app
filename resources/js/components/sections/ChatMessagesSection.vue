@@ -13,13 +13,15 @@
         >
           <div v-if="message.user_id == authUserId">
             <div class="text-align-right">Me, {{ message.created_at }}</div>
-            <div class="auth-user-message text-align-right">
+            <span class="auth-user-message float-right">
               {{ message.value }}
-            </div>
+            </span>
+            <div class="clearfix"></div>
           </div>
           <div v-else>
-            <div>{{ message.user_name }}, {{ message.created_at }}</div>
-            <div class="other-users-message">{{ message.value }}</div>
+            <div><strong>{{ message.user_name }}</strong>, {{ message.created_at }}</div>
+            <span class="other-users-message float-left">{{ message.value }}</span>
+            <div class="clearfix"></div>
           </div>
         </div>
       </div>

@@ -2,7 +2,7 @@
   <div class="col-md-9 chat-message row">
     <div class="col-md-2"></div>
     <div class="col-md-10 message-applet">
-      <div class="all-messages">
+      <div id="all-messages-section" class="all-messages">
         <div
           class="message-box"
           v-for="message in chatRoomMessages"
@@ -67,13 +67,19 @@ export default {
         .get(`/api/chat-rooms/${this.chatRoomId}/messages`)
         .then((response) => {
           this.chatRoomMessages = response.data;
+
+          //Note: force the scrollbar of all messages in chat room to be always bottom
+          let allMessagesSection = this.$el.querySelector("#all-messages-section");
+          setTimeout(function () {
+            allMessagesSection.scrollTop = allMessagesSection.scrollHeight;
+          }, 1);
         });
     },
     storeMessage() {
       if(this.newMessageText.length < 1){ //Note: do not make request when the field is empty
         return;
       }
-      
+
       this.validationErrors = null;
 
       axios

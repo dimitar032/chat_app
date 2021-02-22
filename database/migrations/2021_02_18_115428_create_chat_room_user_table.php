@@ -22,6 +22,8 @@ class CreateChatRoomUserTable extends Migration
             $table->unsignedBigInteger('chat_room_id');
             $table->foreign('chat_room_id')->references('id')->on('chat_rooms');
 
+            $table->unique(['user_id', 'chat_room_id']);
+
             $table->timestamps();
         });
     }

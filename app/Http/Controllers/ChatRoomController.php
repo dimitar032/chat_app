@@ -30,12 +30,13 @@ class ChatRoomController extends Controller
             $chatRoom = ChatRoom::create(['name' => $request->input('name')]);
 
             $chatRoom->users()->attach(
-                array_merge(
-                    $request->input('selected_users_id'), //Note: Attach all selected users
-                    [auth()->user()->id] //Note: attach auth user
+                array_unique(
+                    array_merge(
+                        $request->input('selected_users_id'), //Note: Attach all selected users
+                        [auth()->user()->id] //Note: attach auth user
+                    )
                 )
             );
-
         } catch (\Throwable $e) {
 
             DB::rollBack();
@@ -61,7 +62,7 @@ class ChatRoomController extends Controller
         }
 
         $chatRoom = ChatRoom::findOrFail($id);
-        
+
         $data['chat_room_name'] = $chatRoom->name;
         $data['users'] = $chatRoom->users()->select('name')->get();
 
@@ -114,7 +115,6 @@ class ChatRoomController extends Controller
             $chatRoom = ChatRoom::findOrFail($id);
 
             $chatRoom->messages()->attach($message->id);
-
         } catch (\Throwable $e) {
 
             DB::rollBack();

@@ -70,6 +70,18 @@
   .chat-message {
     background: $dirtyWhite;
 
+    .chat-room-name {
+     font-size: 22px; 
+     text-align: center;
+     font-weight: 600;
+    }
+
+    .chat-room-participants{
+      text-align: center;
+      border-bottom: 1px solid $purpleMain;
+      margin-bottom: 12px;
+    }
+
     .message-applet {
         display: flex;
         flex-direction: column;

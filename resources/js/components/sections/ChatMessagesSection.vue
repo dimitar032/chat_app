@@ -2,6 +2,9 @@
   <div class="col-md-9 chat-message row">
     <div class="col-md-2"></div>
     <div class="col-md-10 message-applet">
+      <div class="chat-room-name">{{chatRoomName}}</div>
+      <div class="chat-room-participants">{{chatRoomParticipantsName}}</div>
+
       <div id="all-messages-section" class="all-messages">
         <div
           class="message-box"
@@ -58,8 +61,16 @@ export default {
     newMessageText: "",
     validationErrors: null,
     chatRoomMessages: [],
+    chatRoomName: '',
+    chatRoomParticipantsName: '',
   }),
   mounted() {
+    axios
+        .get(`/api/chat-rooms/${this.chatRoomId}`)
+        .then((response) => {
+          this.chatRoomName = response.data.chat_room_name;
+          this.chatRoomParticipantsName = Array.prototype.map.call(response.data.users, (u) => u.name).join(", ")
+        });
     this.getAllMessagesInThisChatRoom();
   },
   methods: {

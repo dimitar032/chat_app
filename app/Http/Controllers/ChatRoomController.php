@@ -49,6 +49,26 @@ class ChatRoomController extends Controller
     }
 
     /**
+     * Get chat room name with users from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function get($id)
+    {
+        if (Gate::denies('can-auth-user-see-chat-room', [$id])) {
+            abort(403);
+        }
+
+        $chatRoom = ChatRoom::findOrFail($id);
+        
+        $data['chat_room_name'] = $chatRoom->name;
+        $data['users'] = $chatRoom->users()->select('name')->get();
+
+        return response()->json($data);
+    }
+
+    /**
      * Display the specified chat room.
      *
      * @param  int  $id

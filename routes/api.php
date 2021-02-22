@@ -24,6 +24,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('users/{id}/chat-rooms', 'UserController@getAllChatRooms');
 
     //ChatRooms
+    Route::get('chat-rooms/{id}', 'ChatRoomController@get');
     Route::post('chat-rooms', 'ChatRoomController@store');
     Route::post('chat-rooms/{id}/messages', 'ChatRoomController@storeMessage');
     Route::get('chat-rooms/{id}/messages', 'ChatRoomController@getMessages');

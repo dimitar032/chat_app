@@ -42,24 +42,50 @@
           class="new-message-input"
           id="newMessage"
           type="text"
+          v-model="newMessageText"
           name="newMessage"
           placeholder="Type a message"
           autofocus
         />
-        <button type="submit" class="btn btn-primary">Send</button>
+        <button @click="storeMessage()" class="btn btn-primary">Send</button>
       </div>
+
+      <validation-errors :errors="validationErrors" v-if="validationErrors"></validation-errors>
     </div>
   </div>
-
 </template>
 
 <script>
+import axios from "axios";
 
 export default {
   props: {
     chatRoomId: {
       type: Number,
       required: true,
+    },
+  },
+  data: () => ({
+    newMessageText: "",
+    validationErrors: null,
+  }),
+  methods: {
+    storeMessage() {
+      this.validationErrors = null;
+
+      axios
+        .post(`/api/chat-rooms/${this.chatRoomId}/messages`, {
+          value: this.newMessageText,
+        })
+        .then((response) => {
+          this.newMessageText = "";
+          console.log(response);
+        })
+        .catch((e) => {
+          if (e.response.status == 422) {
+            this.validationErrors = e.response.data.errors;
+          }
+        });
     },
   },
 };

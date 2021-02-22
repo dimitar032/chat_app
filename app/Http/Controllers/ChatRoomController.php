@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\ChatRoom;
+use App\Message;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -64,6 +65,44 @@ class ChatRoomController extends Controller
         return view('chat-room', [
             'id' => $chatRoom->id,
         ]);
+    }
+
+     /**
+     * Store a newly created message to the chat room in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function storeMessage(Request $request, $id)
+    {
+        if (Gate::denies('can-auth-user-see-chat-room', [$id])) {
+            abort(403);
+        }
+
+        $this->validate($request, [
+            'value' => 'required|min:1|max:65535',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $message = Message::create([
+                'value' => $request->input('value'),
+                'user_id' => auth()->user()->id,
+            ]);
+
+            $chatRoom = ChatRoom::findOrFail($id);
+
+            $chatRoom->messages()->attach($message->id);
+
+        } catch (\Throwable $e) {
+
+            DB::rollBack();
+            throw $e;
+        }
+        DB::commit();
+
+        return response()->json($message, 201);
     }
 
 }

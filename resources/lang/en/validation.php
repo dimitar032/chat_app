@@ -146,6 +146,8 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'selected_users_id' => 'Selected Users'
+    ],
 
 ];
